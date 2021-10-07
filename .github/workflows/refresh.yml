@@ -1,0 +1,25 @@
+name: refresh l1 metadata
+on:
+  schedule:
+    - cron: "5,35 * * * *"
+jobs:
+  update-rarible-opensea:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v2
+      - name: setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "14"
+      - name: load node_modules cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            node_modules
+            */*/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+      - name: install deps
+        run: yarn
+      - name: run prettier tests
+        run: DEBUG=aavegotchi:metadata yarn start
